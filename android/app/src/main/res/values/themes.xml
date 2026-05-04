@@ -1,0 +1,8 @@
+<resources>
+    <style name="Theme.Shadow" parent="android:Theme.DeviceDefault.NoActionBar">
+        <item name="android:windowBackground">@color/shadow_background</item>
+        <item name="android:navigationBarColor">@color/shadow_background</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+    </style>
+</resources>

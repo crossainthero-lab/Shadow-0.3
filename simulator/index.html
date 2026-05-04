@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0e1110" />
+    <title>Shadow Markets</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <div class="ambient ambient-a"></div>
+      <div class="ambient ambient-b"></div>
+
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark"><span></span></div>
+          <div>
+            <div class="brand-name">Shadow Markets</div>
+            <button class="account-switcher" id="accountSwitcherButton" type="button">
+              <span id="accountEmoji">Acct</span>
+              <span id="accountName">Account 1</span>
+              <svg viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"></path></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <button class="ghost-icon" id="refreshButton" type="button" title="Refresh prices" aria-label="Refresh prices">
+            <svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.34-5.66"></path><path d="M20 4v6h-6"></path></svg>
+          </button>
+          <button class="ghost-icon" id="seedCashButton" type="button" title="Add cash" aria-label="Add cash">
+            <svg viewBox="0 0 24 24"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+          </button>
+          <button class="ghost-icon" id="copyAddressButton" type="button" title="Copy wallet address" aria-label="Copy wallet address">
+            <svg viewBox="0 0 24 24"><path d="M9 9h10v10H9z"></path><path d="M5 15H4V5h10v1"></path></svg>
+          </button>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <nav class="app-tabs">
+          <button class="app-tab active" id="marketsTabButton" type="button" data-tab="markets">Markets</button>
+          <button class="app-tab" id="portfolioTabButton" type="button" data-tab="portfolio">Portfolio</button>
+        </nav>
+
+        <section class="tab-view" id="marketsView">
+          <div class="market-layout">
+            <section class="panel market-panel">
+              <div class="panel-header market-header">
+                <div>
+                  <h1>All Coins</h1>
+                  <p id="syncLabel">Waiting for market sync</p>
+                </div>
+                <div class="timeframe-row" id="timeframeRow">
+                  <button class="timeframe-pill active" type="button" data-timeframe="5m">5M</button>
+                  <button class="timeframe-pill" type="button" data-timeframe="1h">1H</button>
+                  <button class="timeframe-pill" type="button" data-timeframe="1d">1D</button>
+                  <button class="timeframe-pill" type="button" data-timeframe="1w">1W</button>
+                  <button class="timeframe-pill" type="button" data-timeframe="1m">1M</button>
+                </div>
+              </div>
+              <div class="market-filter-row" id="marketFilterRow">
+                <button class="market-filter-chip active" type="button" data-filter="all">All</button>
+                <button class="market-filter-chip" type="button" data-filter="memes">Memecoins</button>
+                <button class="market-filter-chip" type="button" data-filter="majors">Majors</button>
+                <button class="market-filter-chip" type="button" data-filter="held">Held</button>
+              </div>
+              <div class="market-table-head">
+                <span>Token</span>
+                <span>Price</span>
+                <span>5M</span>
+                <span>1H</span>
+                <span>1D</span>
+                <span>Chart</span>
+              </div>
+              <div class="coin-list" id="coinList"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="tab-view hidden" id="portfolioView">
+          <div class="portfolio-layout">
+            <section class="panel summary-panel">
+              <div class="summary-top">
+                <div>
+                  <div class="summary-label">Portfolio Value</div>
+                  <div class="summary-balance" id="portfolioBalance">$0.00</div>
+                </div>
+                <div class="summary-change-block">
+                  <span class="balance-change" id="portfolioChange">$0.00</span>
+                  <span class="change-pill" id="portfolioChangePct">0.00%</span>
+                </div>
+              </div>
+              <div class="summary-grid">
+                <div class="summary-card">
+                  <span>USD Cash</span>
+                  <strong id="usdBalance">$0.00</strong>
+                </div>
+                <div class="summary-card">
+                  <span>AUD Cash</span>
+                  <strong id="audBalance">$0.00</strong>
+                </div>
+                <div class="summary-card">
+                  <span>Open Positions</span>
+                  <strong id="positionCount">0</strong>
+                </div>
+                <div class="summary-card">
+                  <span>24H P/L</span>
+                  <strong id="dayPnL">$0.00</strong>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel account-panel">
+              <div class="account-card">
+                <div class="account-meta">
+                  <span class="account-badge" id="accountBadge">Acct</span>
+                  <div>
+                    <strong id="sidebarAccountName">Account 1</strong>
+                    <p id="walletAddress">Shadow...</p>
+                  </div>
+                </div>
+                <button class="secondary-button block-button" id="copySidebarAddressButton" type="button">Copy address</button>
+              </div>
+              <div class="mini-stats" id="miniStats"></div>
+            </section>
+
+            <section class="panel holdings-panel">
+              <div class="panel-header">
+                <div>
+                  <h2>What You Own</h2>
+                  <p>Current balances and position values.</p>
+                </div>
+              </div>
+              <div class="holdings-list" id="holdingsList"></div>
+            </section>
+
+            <section class="panel history-panel">
+              <div class="panel-header">
+                <div>
+                  <h2>Trade History</h2>
+                  <p>Latest trades and rotations.</p>
+                </div>
+              </div>
+              <div class="activity-list" id="activityList"></div>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="chart-modal hidden" id="chartModal">
+      <div class="chart-modal-backdrop" id="chartModalBackdrop"></div>
+      <section class="chart-modal-sheet">
+        <div class="chart-modal-head">
+          <div id="chartModalHeader"></div>
+          <button class="ghost-icon" id="closeChartModalButton" type="button" aria-label="Close full screen chart">
+            <svg viewBox="0 0 24 24"><path d="M6 6l12 12"></path><path d="M18 6 6 18"></path></svg>
+          </button>
+        </div>
+        <div class="chart-modal-toolbar">
+          <div class="timeframe-row" id="chartModalTimeframeRow">
+            <button class="timeframe-pill active" type="button" data-timeframe="5m">5M</button>
+            <button class="timeframe-pill" type="button" data-timeframe="1h">1H</button>
+            <button class="timeframe-pill" type="button" data-timeframe="1d">1D</button>
+            <button class="timeframe-pill" type="button" data-timeframe="1w">1W</button>
+            <button class="timeframe-pill" type="button" data-timeframe="1m">1M</button>
+          </div>
+          <div class="chart-modal-stats" id="chartModalStats"></div>
+        </div>
+        <div class="chart-modal-body">
+          <div class="chart-modal-chart" id="chartModalChart"></div>
+          <div class="detail-stats" id="chartDetailStats"></div>
+          <form class="trade-form" id="tradeForm">
+            <div class="trade-form-head">
+              <h2>Trade</h2>
+              <p>Buy or rotate into the selected coin.</p>
+            </div>
+
+            <label class="flow-label">
+              <span>Pay with</span>
+              <div class="field-shell">
+                <select id="fromAssetSelect"></select>
+              </div>
+            </label>
+
+            <label class="flow-label">
+              <span>Receive</span>
+              <div class="field-shell">
+                <select id="toAssetSelect"></select>
+              </div>
+            </label>
+
+            <label class="flow-label">
+              <span>Amount</span>
+              <div class="amount-shell">
+                <input id="tradeAmountInput" inputmode="decimal" placeholder="0" />
+                <button class="amount-max-button" id="maxTradeButton" type="button">MAX</button>
+              </div>
+            </label>
+
+            <div class="trade-preview">
+              <div class="preview-row">
+                <span>Available</span>
+                <strong id="availableBalance">0</strong>
+              </div>
+              <div class="preview-row">
+                <span>Rate</span>
+                <strong id="tradeRate">-</strong>
+              </div>
+              <div class="preview-row">
+                <span>You receive</span>
+                <strong id="receiveAmount">0</strong>
+              </div>
+              <div class="preview-row">
+                <span>Fee</span>
+                <strong id="tradeFee">0.25%</strong>
+              </div>
+            </div>
+
+            <div class="quick-row">
+              <button class="quick-chip" data-quick-amount="250" type="button">$250</button>
+              <button class="quick-chip" data-quick-amount="1000" type="button">$1K</button>
+              <button class="quick-chip" data-quick-amount="5000" type="button">$5K</button>
+            </div>
+
+            <button class="primary-button" type="submit">Trade Now</button>
+          </form>
+          <section class="chart-transactions">
+            <div class="panel-header">
+              <div>
+                <h2>Transactions</h2>
+                <p>Recent fills and rotations for this account.</p>
+              </div>
+            </div>
+            <div class="activity-list" id="chartActivityList"></div>
+          </section>
+        </div>
+      </section>
+    </div>
+
+    <div class="toast hidden" id="toast"></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

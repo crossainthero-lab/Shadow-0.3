@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0e1110" />
+    <title>Shadow Coin</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <div class="ambient ambient-a"></div>
+      <div class="ambient ambient-b"></div>
+
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark"><span></span></div>
+          <div>
+            <div class="brand-name">Shadow Markets</div>
+            <button class="account-switcher" id="accountSwitcherButton" type="button">
+              <span id="accountEmoji">Acct</span>
+              <span id="accountName">Account 1</span>
+              <svg viewBox="0 0 24 24"><path d="m7 10 5 5 5-5"></path></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <button class="ghost-icon" id="backToMarketsButton" type="button" title="Back to markets" aria-label="Back to markets">
+            <svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"></path></svg>
+          </button>
+          <button class="ghost-icon" id="refreshButton" type="button" title="Refresh prices" aria-label="Refresh prices">
+            <svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.34-5.66"></path><path d="M20 4v6h-6"></path></svg>
+          </button>
+          <button class="ghost-icon" id="copyAddressButton" type="button" title="Copy wallet address" aria-label="Copy wallet address">
+            <svg viewBox="0 0 24 24"><path d="M9 9h10v10H9z"></path><path d="M5 15H4V5h10v1"></path></svg>
+          </button>
+        </div>
+      </header>
+
+      <main class="workspace coin-workspace">
+        <section class="panel coin-page-panel">
+          <div class="coin-page-shell">
+            <section class="coin-main-column">
+              <div class="coin-page-head">
+                <div class="coin-page-title-row">
+                  <div id="coinHeader"></div>
+                  <div class="chart-modal-stats" id="coinTopStats"></div>
+                </div>
+                <div class="timeframe-row" id="timeframeRow">
+                  <button class="timeframe-pill active" type="button" data-timeframe="5m">5M</button>
+                  <button class="timeframe-pill" type="button" data-timeframe="1h">1H</button>
+                  <button class="timeframe-pill" type="button" data-timeframe="1d">1D</button>
+                  <button class="timeframe-pill" type="button" data-timeframe="1w">1W</button>
+                  <button class="timeframe-pill" type="button" data-timeframe="1m">1M</button>
+                </div>
+                <div class="chart-mode-row" id="chartModeRow">
+                  <button class="chart-mode-pill active" type="button" data-chart-mode="line">Line</button>
+                  <button class="chart-mode-pill" type="button" data-chart-mode="candles">Candles</button>
+                </div>
+              </div>
+
+              <div class="coin-page-chart" id="coinChart"></div>
+              <div class="detail-stats" id="coinDetailStats"></div>
+
+              <section class="coin-page-section coin-tape-section">
+                <div class="panel-header">
+                  <div>
+                    <h2>Transactions</h2>
+                    <p>Live market flow moving this chart.</p>
+                  </div>
+                </div>
+                <div class="activity-list" id="activityList"></div>
+              </section>
+            </section>
+
+            <aside class="coin-side-column">
+              <section class="coin-page-section market-profile-section" id="marketProfileCard"></section>
+
+              <form class="trade-form coin-trade-rail" id="tradeForm">
+                <div class="trade-form-head">
+                  <h2>Trade</h2>
+                  <p>Swap into position without leaving the chart.</p>
+                </div>
+
+                <label class="flow-label">
+                  <span>Pay with</span>
+                  <button class="field-shell field-shell-select" id="fromAssetPickerButton" type="button">
+                    <div class="field-shell-copy">
+                      <strong id="fromAssetLabel">Select funding asset</strong>
+                      <small id="fromAssetHint">Available balance updates live</small>
+                    </div>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"></path></svg>
+                  </button>
+                </label>
+
+                <label class="flow-label">
+                  <span>Receive</span>
+                  <button class="field-shell field-shell-select" id="toAssetPickerButton" type="button">
+                    <div class="field-shell-copy">
+                      <strong id="toAssetLabel">Selected market</strong>
+                      <small id="toAssetHint">Execution follows current market price</small>
+                    </div>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"></path></svg>
+                  </button>
+                </label>
+
+                <label class="flow-label">
+                  <span>Amount</span>
+                  <div class="amount-shell">
+                    <input id="tradeAmountInput" inputmode="decimal" placeholder="0" />
+                    <button class="amount-max-button" id="maxTradeButton" type="button">MAX</button>
+                  </div>
+                </label>
+
+                <div class="trade-preview">
+                  <div class="preview-row">
+                    <span>Available</span>
+                    <strong id="availableBalance">0</strong>
+                  </div>
+                  <div class="preview-row">
+                    <span>Rate</span>
+                    <strong id="tradeRate">-</strong>
+                  </div>
+                  <div class="preview-row">
+                    <span>You receive</span>
+                    <strong id="receiveAmount">0</strong>
+                  </div>
+                  <div class="preview-row">
+                    <span>Fee</span>
+                    <strong id="tradeFee">0.25%</strong>
+                  </div>
+                </div>
+
+                <div class="quick-row">
+                  <button class="quick-chip" data-quick-amount="250" type="button">$250</button>
+                  <button class="quick-chip" data-quick-amount="1000" type="button">$1K</button>
+                  <button class="quick-chip" data-quick-amount="5000" type="button">$5K</button>
+                </div>
+
+                <button class="primary-button" type="submit">Place Trade</button>
+              </form>
+            </aside>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="toast hidden" id="toast"></div>
+    <div class="wallet-modal hidden" id="walletModal">
+      <div class="picker-backdrop" id="walletModalBackdrop"></div>
+      <section class="wallet-sheet">
+        <div class="wallet-sheet-head">
+          <div class="brand wallet-brand">
+            <div class="brand-mark"><span></span></div>
+            <div>
+              <div class="brand-name">Shadow</div>
+              <div class="wallet-sheet-subtitle" id="walletModalSubtitle">Preparing trade</div>
+            </div>
+          </div>
+          <button class="ghost-icon hidden" id="walletModalCloseButton" type="button" aria-label="Close wallet confirmation">
+            <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+          </button>
+        </div>
+
+        <div class="wallet-loading-state" id="walletLoadingState">
+          <div class="wallet-spinner"></div>
+          <strong id="walletLoadingTitle">Opening Shadow</strong>
+          <p id="walletLoadingCopy">Routing request to your wallet extension.</p>
+          <div class="wallet-progress-track">
+            <div class="wallet-progress-bar"></div>
+          </div>
+        </div>
+
+        <div class="wallet-confirm-state hidden" id="walletConfirmState">
+          <div class="wallet-request-pill">Contract Interaction</div>
+          <div class="wallet-request-card" id="walletRequestSummary"></div>
+          <div class="wallet-details">
+            <div class="wallet-detail-row">
+              <span>Network</span>
+              <strong>Solana Mainnet</strong>
+            </div>
+            <div class="wallet-detail-row">
+              <span>Allowance</span>
+              <strong id="walletAllowanceValue">0</strong>
+            </div>
+            <div class="wallet-detail-row">
+              <span>Approval</span>
+              <strong>Token program interaction</strong>
+            </div>
+            <div class="wallet-detail-row">
+              <span>Estimated fee</span>
+              <strong id="walletFeeValue">$0.00</strong>
+            </div>
+          </div>
+          <div class="wallet-action-row">
+            <button class="secondary-button wallet-button" id="walletRejectButton" type="button">Reject</button>
+            <button class="primary-button wallet-button" id="walletApproveButton" type="button">Approve & Confirm</button>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="picker-modal hidden" id="assetPickerModal">
+      <div class="picker-backdrop" id="assetPickerBackdrop"></div>
+      <section class="picker-sheet">
+        <div class="picker-head">
+          <div>
+            <h2 id="assetPickerTitle">Choose Asset</h2>
+            <p id="assetPickerSubtitle">Select an asset for this trade.</p>
+          </div>
+          <button class="ghost-icon" id="assetPickerCloseButton" type="button" aria-label="Close asset picker">
+            <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+          </button>
+        </div>
+        <div class="picker-list" id="assetPickerList"></div>
+      </section>
+    </div>
+
+    <script src="coin.js"></script>
+  </body>
+</html>

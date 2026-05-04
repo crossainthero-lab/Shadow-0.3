@@ -1,0 +1,5 @@
+<resources>
+    <color name="shadow_background">#0E1110</color>
+    <color name="shadow_surface">#171D1A</color>
+    <color name="shadow_accent">#D7FF64</color>
+</resources>
